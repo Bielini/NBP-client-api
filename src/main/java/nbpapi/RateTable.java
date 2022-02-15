@@ -7,6 +7,7 @@ public class RateTable {
     private String table;
     private String no;
     private String effectiveDate;
+    private String tradingDate;
     private List<Rate> rates;
 
 
@@ -26,13 +27,19 @@ public class RateTable {
         return rates;
     }
 
+    public String getTradingDate() {
+        return tradingDate;
+    }
+
     @Override
     public String toString() {
-        return "Currency{" +
+        return "RateTable{" +
                 "table='" + table + '\'' +
                 ", no='" + no + '\'' +
                 ", effectiveDate='" + effectiveDate + '\'' +
+                ", tradingDate='" + tradingDate + '\'' +
                 ", rates=" + rates +
                 '}';
     }
 }
+

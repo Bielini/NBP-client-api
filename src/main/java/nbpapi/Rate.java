@@ -5,8 +5,9 @@ import java.math.BigDecimal;
 public class Rate {
     private String currency;
     private String code;
-    private BigDecimal mid;
-
+    private String ask;
+    private double bid;
+    private double mid;
 
 
     public String getCurrency() {
@@ -17,7 +18,15 @@ public class Rate {
         return code;
     }
 
-    public BigDecimal getMid() {
+    public String getAsk() {
+        return ask;
+    }
+
+    public double getBid() {
+        return bid;
+    }
+
+    public double getMid() {
         return mid;
     }
 
@@ -26,6 +35,8 @@ public class Rate {
         return "Rate{" +
                 "currency='" + currency + '\'' +
                 ", code='" + code + '\'' +
+                ", ask='" + ask + '\'' +
+                ", bid=" + bid +
                 ", mid=" + mid +
                 '}';
     }
