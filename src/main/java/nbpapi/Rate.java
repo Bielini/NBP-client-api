@@ -1,7 +1,15 @@
 package nbpapi;
 
-import java.math.BigDecimal;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Rate {
     private String currency;
     private String code;
@@ -10,25 +18,7 @@ public class Rate {
     private double mid;
 
 
-    public String getCurrency() {
-        return currency;
-    }
 
-    public String getCode() {
-        return code;
-    }
-
-    public String getAsk() {
-        return ask;
-    }
-
-    public double getBid() {
-        return bid;
-    }
-
-    public double getMid() {
-        return mid;
-    }
 
     @Override
     public String toString() {

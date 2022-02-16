@@ -39,8 +39,12 @@ public class ConsoleNBPApp {
 
 
     }
+//TODO input validation and errors interpretation
+
 
     private static void exchange() {
+        //TODO print code list
+//        printCurrencyCodes();
         System.out.println("Type amount: ");
         double amount = scanner.nextDouble();
         scanner.nextLine();
@@ -51,7 +55,22 @@ public class ConsoleNBPApp {
         try {
             double result = service.calc(amount, sourceCode, targetCode);
             System.out.printf("result = %.2f\n",result);
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    //TODO repair that
+    private static void printCurrencyCodes(){
+        try {
+            List<String> allCodes = service.findAllCodes(Table.TABLE_A);
+            for (String allCode : allCodes) {
+                System.out.println(allCode);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

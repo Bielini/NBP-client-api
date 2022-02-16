@@ -11,4 +11,5 @@ public interface ServiceNBP {
 
     double calc(double amount, String source ,String target) throws IOException, InterruptedException;
     List<Rate> findAll(Table table, LocalDate date) throws IOException, InterruptedException;
+    List<String> findAllCodes(Table table) throws IOException, InterruptedException;
 }
