@@ -2,10 +2,12 @@ import controller.ConsoleController;
 import controller.Menu;
 import controller.MenuItem;
 import nbpapi.Rate;
+import nbpapi.RateTable;
 import nbpapi.Table;
 import nbpapi.URIGenerator;
 import repository.ApiRepository;
 import repository.RateRepository;
+import repository.RateRepositoryNBP;
 import repository.RateRepositoryNBPApi;
 
 import java.time.LocalDate;
@@ -14,8 +16,8 @@ import java.util.Scanner;
 
 public class ConsoleNBPApp {
     private static final Scanner scanner = new Scanner(System.in);
-    private static final RateRepository rates = new RateRepositoryNBPApi();
-//    private static final ApiRepository<Rate> rates = new ApiRepository<Rate>();
+    private static final RateRepository rates = new RateRepositoryNBP();
+
 
     private static void printTable(List<Rate> list, Table table) {
         System.out.printf("%-35s %5s %5s%n", "Currency name", "Code ISO(4217)", "Mid");
@@ -31,7 +33,7 @@ public class ConsoleNBPApp {
     private static void handleOptionTable(Table table) {
         try {
             printTable(rates.findByTableAndDate(table, LocalDate.now()), table);
-//            printTable(rates.getList(URIGenerator.currentTableJson(table)),table);
+
         } catch (Exception e) {
             System.err.println("Connection Error!\n " + e.getMessage());
         }
