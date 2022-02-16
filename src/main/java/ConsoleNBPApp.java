@@ -2,14 +2,13 @@ import controller.ConsoleController;
 import controller.Menu;
 import controller.MenuItem;
 import nbpapi.Rate;
-import nbpapi.RateTable;
 import nbpapi.Table;
-import nbpapi.URIGenerator;
-import repository.ApiRepository;
 import repository.RateRepository;
 import repository.RateRepositoryNBP;
-import repository.RateRepositoryNBPApi;
+import service.ServiceNBP;
+import service.ServiceNBPApi;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
@@ -17,7 +16,7 @@ import java.util.Scanner;
 public class ConsoleNBPApp {
     private static final Scanner scanner = new Scanner(System.in);
     private static final RateRepository rates = new RateRepositoryNBP();
-
+    private static final ServiceNBP service = new ServiceNBPApi(rates);
 
     private static void printTable(List<Rate> list, Table table) {
         System.out.printf("%-35s %5s %5s%n", "Currency name", "Code ISO(4217)", "Mid");
@@ -32,13 +31,29 @@ public class ConsoleNBPApp {
 
     private static void handleOptionTable(Table table) {
         try {
-            printTable(rates.findByTableAndDate(table, LocalDate.now()), table);
+            printTable(service.findAll(table, LocalDate.now()), table);
 
         } catch (Exception e) {
             System.err.println("Connection Error!\n " + e.getMessage());
         }
 
 
+    }
+
+    private static void exchange() {
+        System.out.println("Type amount: ");
+        double amount = scanner.nextDouble();
+        scanner.nextLine();
+        System.out.println("Type code currency:");
+        String sourceCode = scanner.nextLine();
+        System.out.println("Type currency target code:");
+        String targetCode = scanner.nextLine();
+        try {
+            double result = service.calc(amount, sourceCode, targetCode);
+            System.out.printf("result = %.2f\n",result);
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
@@ -54,7 +69,7 @@ public class ConsoleNBPApp {
                         MenuItem.builder()
                                 .label("Download table B")
                                 .action(() ->
-                                    handleOptionTable(Table.TABLE_B)
+                                        handleOptionTable(Table.TABLE_B)
                                 )
                                 .build(),
                         MenuItem.builder()
@@ -62,6 +77,10 @@ public class ConsoleNBPApp {
                                 .action(() -> {
                                     handleOptionTable(Table.TABLE_C);
                                 })
+                                .build(),
+                        MenuItem.builder()
+                                .label("Currency change")
+                                .action(ConsoleNBPApp::exchange)
                                 .build(),
                         MenuItem.builder()
                                 .label("Exit")
