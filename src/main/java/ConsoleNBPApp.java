@@ -5,6 +5,8 @@ import nbpapi.Rate;
 import nbpapi.Table;
 import repository.RateRepository;
 import repository.RateRepositoryNBP;
+import repository.RateRepositoryNBPApi;
+import repository.RateRepositoryNBPCached;
 import service.ServiceNBP;
 import service.ServiceNBPApi;
 
@@ -13,11 +15,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class ConsoleNBPApp {
     private static final Scanner scanner = new Scanner(System.in);
-    private static final RateRepository rates = new RateRepositoryNBP();
+    private static final RateRepository rates = new RateRepositoryNBPApi();
     private static final ServiceNBP service = new ServiceNBPApi(rates);
 
 
@@ -61,6 +62,15 @@ public class ConsoleNBPApp {
 
     }
 
+//    private static void handleOptionTable(Table table) {
+//        System.out.println("Type a date: ");
+//        String date = scanner.nextLine();
+//        try {
+//            printTable(service.findAll(table, LocalDate.parse(date)), table);
+//        } catch (Exception e) {
+//            System.err.println("Connection Error!\n " + e.getMessage());
+//        }
+//    }
     private static void handleOptionTable(Table table) {
         try {
             printTable(service.findAll(table, LocalDate.now()), table);

@@ -1,6 +1,7 @@
 package nbpapi;
 
 import java.net.URI;
+import java.time.LocalDate;
 
 public class URIGenerator {
 
@@ -11,4 +12,9 @@ public class URIGenerator {
         String uriStr = String.format("%s%s%s",prefix,table.getValue(),format);
        return URI.create(uriStr);
     }
+    public static URI tableByDateJson(Table table, LocalDate date){
+        String uriStr = String.format("%s/%s/%s%s", prefix, table.getValue(), date, format);
+        return URI.create(uriStr);
+    }
 }
+
