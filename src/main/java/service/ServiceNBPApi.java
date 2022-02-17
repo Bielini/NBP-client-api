@@ -28,24 +28,22 @@ public class ServiceNBPApi implements ServiceNBP {
         Optional<Rate> targetRate = rates.stream()
                 .filter(rate -> rate.getCode().equals(target))
                 .findFirst();
+
         if (sourceRate.isPresent() && targetRate.isPresent()) {
-
             return amount * sourceRate.get().getMid() / targetRate.get().getMid();
-
         } else {
-            throw new InvalidParameterException("Missing country code");
+            throw new InvalidParameterException("Missing code");
         }
-
     }
 
     @Override
     public List<Rate> findAll(Table table, LocalDate date) throws IOException, InterruptedException {
-        return rates.findByTableAndDate(table,date);
+        return rates.findByTableAndDate(table, date);
     }
 
     @Override
     public List<String> findAllCodes(Table table) throws IOException, InterruptedException {
-        return findAll(table,LocalDate.now()).stream()
+        return findAll(table, LocalDate.now()).stream()
                 .map(Rate::getCode)
                 .collect(Collectors.toList());
     }
