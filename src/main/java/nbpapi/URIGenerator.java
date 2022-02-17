@@ -16,5 +16,6 @@ public class URIGenerator {
         String uriStr = String.format("%s/%s/%s%s", prefix, table.getValue(), date, format);
         return URI.create(uriStr);
     }
+
 }
 

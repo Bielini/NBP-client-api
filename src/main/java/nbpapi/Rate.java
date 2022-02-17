@@ -22,12 +22,6 @@ public class Rate {
 
     @Override
     public String toString() {
-        return "Rate{" +
-                "currency='" + currency + '\'' +
-                ", code='" + code + '\'' +
-                ", ask='" + ask + '\'' +
-                ", bid=" + bid +
-                ", mid=" + mid +
-                '}';
+        return code;
     }
 }

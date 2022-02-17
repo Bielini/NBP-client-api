@@ -15,7 +15,8 @@ public class ConsoleController {
             menu.print();
             if (scanner.hasNextInt()) {
                 final int option = scanner.nextInt();
-                scanner.nextLine();     //scanner clear
+                scanner.nextLine();
+
                 if (menu.isValidOption(option)) {
                     menu.run(option);
                 } else {
@@ -23,7 +24,7 @@ public class ConsoleController {
                 }
             } else {
                 System.out.println("Type action number!");
-                scanner.nextLine();     //scanner clear
+                scanner.nextLine();
             }
         }
     }

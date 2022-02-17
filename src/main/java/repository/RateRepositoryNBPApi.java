@@ -2,6 +2,7 @@ package repository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jdk.jshell.spi.ExecutionControl;
 import nbpapi.Rate;
 import nbpapi.RateTable;
 import nbpapi.Table;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class RateRepositoryNBPApi implements RateRepository {
+
     private final HttpClient client = HttpClient.newHttpClient();
     @Override
     public List<Rate> findByTableAndDate(Table table, LocalDate date) throws IOException, InterruptedException {
@@ -27,5 +29,10 @@ public class RateRepositoryNBPApi implements RateRepository {
         final List<RateTable> rateTableList = mapper.readValue(response.body(), new TypeReference<List<RateTable>>() {
         });
         return rateTableList.get(0).getRates();
+    }
+
+    @Override
+    public List<Rate> findByTableLast(Table table) throws IOException, InterruptedException {
+        throw new RuntimeException("Comming soon");
     }
 }

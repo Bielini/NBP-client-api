@@ -4,8 +4,6 @@ import controller.MenuItem;
 import nbpapi.Rate;
 import nbpapi.Table;
 import repository.RateRepository;
-import repository.RateRepositoryNBP;
-import repository.RateRepositoryNBPApi;
 import repository.RateRepositoryNBPCached;
 import service.ServiceNBP;
 import service.ServiceNBPApi;
@@ -18,7 +16,7 @@ import java.util.regex.Pattern;
 
 public class ConsoleNBPApp {
     private static final Scanner scanner = new Scanner(System.in);
-    private static final RateRepository rates = new RateRepositoryNBPApi();
+    private static final RateRepository rates = new RateRepositoryNBPCached();
     private static final ServiceNBP service = new ServiceNBPApi(rates);
 
 
@@ -62,22 +60,16 @@ public class ConsoleNBPApp {
 
     }
 
-//    private static void handleOptionTable(Table table) {
-//        System.out.println("Type a date: ");
-//        String date = scanner.nextLine();
-//        try {
-//            printTable(service.findAll(table, LocalDate.parse(date)), table);
-//        } catch (Exception e) {
-//            System.err.println("Connection Error!\n " + e.getMessage());
-//        }
-//    }
     private static void handleOptionTable(Table table) {
+        System.out.println("Type a date: ");
+        String date = scanner.nextLine();
         try {
-            printTable(service.findAll(table, LocalDate.now()), table);
+            printTable(service.findAll(table, LocalDate.parse(date)), table);
         } catch (Exception e) {
             System.err.println("Connection Error!\n " + e.getMessage());
         }
     }
+
 
     private static void printTable(List<Rate> list, Table table) {
         System.out.printf("%-45s %5s %5s%n", "Currency name", "Code ISO(4217)", "Mid");

@@ -18,6 +18,13 @@ public class RateRepositoryNBPCached implements RateRepository{
     private Map<LocalDate, RateTable> cacheB = new HashMap<>();
 
     @Override
+    public List<Rate> findByTableLast(Table table) throws IOException, InterruptedException {
+        List<Rate> rates = this.rates.getList(URIGenerator.currentTableJson(table)).get(0).getRates();
+        rates.add(RATE_PLN);
+        return rates;
+    }
+
+    @Override
     public List<Rate> findByTableAndDate(Table table, LocalDate date) throws IOException, InterruptedException {
         if (table == Table.TABLE_A) {
             if (cacheA.containsKey(date)) {
