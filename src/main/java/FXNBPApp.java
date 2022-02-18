@@ -17,10 +17,8 @@ import service.ServiceNBP;
 import service.ServiceNBPApi;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FXNBPApp extends Application {
 
@@ -29,6 +27,7 @@ public class FXNBPApp extends Application {
     private final HBox resultsRow = new HBox();
     private final Scene scene = new Scene(root, 600, 400);
     private final Label amountLabel = new Label("Amount to exchange");
+    private final Label titleLabel = new Label("NBP Currency converter ");
     private final TextField amount = new TextField();
     private final ComboBox<Rate> sourceCode = new ComboBox<>();
     private final ComboBox<Rate> targetCode = new ComboBox<>();
@@ -51,37 +50,70 @@ public class FXNBPApp extends Application {
 
 
     private void builtGUI(Stage stage) {
+        stage.setScene(scene);
+        stage.setTitle("NBP currencies");
+        componentsAdd();
+
+
+        resultButton.setDisable(true);
+        amount.textProperty().addListener((observable, oldValue, newValue) -> {
+            resultButton.setDisable(
+                    !isValidInput(newValue)  ||
+                    sourceCode.getSelectionModel().getSelectedItem() == null ||
+                    targetCode.getSelectionModel().getSelectedItem() == null);
+        });
+//
+        sourceCode.setOnAction(actionEvent -> buttonUnlock());
+        targetCode.setOnAction(actionEvent -> buttonUnlock());
+
+        resultButton.setOnAction(actionEvent -> calcExchangeResult());
+        tableChange.setOnAction(actionEvent -> setTable());
+
+
+
+        tables.getSelectionModel().select(0);
+        setTable();
+        sourceCode.getSelectionModel().select(0);
+        targetCode.getSelectionModel().select(0);
+        stage.show();
+    }
+
+    private void componentsAdd() {
+        tables.getItems().addAll(Table.values());
 
         comboboxiesRow.getChildren().addAll(tables, sourceCode, targetCode, tableChange);
         comboboxiesRow.setAlignment(Pos.TOP_CENTER);
 
-        tables.getSelectionModel().selectFirst();
 
         resultsRow.getChildren().addAll(resultButton, result);
         resultsRow.setAlignment(Pos.TOP_CENTER);
 
-        resultButton.setOnAction(actionEvent -> calcExchangeResult());
-        tableChange.setOnAction(actionEvent -> tableChangeExecute());
         root.setSpacing(10);
         root.setPadding(new Insets(10));
         root.getChildren().addAll(amountLabel, amount, comboboxiesRow, resultsRow);
         root.setAlignment(Pos.TOP_CENTER);
 
-        try {
-            sourceCode.getItems().addAll(service.findAll(Table.TABLE_A, LocalDate.now()));
-            targetCode.getItems().addAll(service.findAll(Table.TABLE_A, LocalDate.now()));
-            tables.getItems().addAll(Table.values());
+    }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    private void buttonUnlock() {
+
+        resultButton.setDisable(true);
+        if (sourceCode.getSelectionModel().getSelectedItem() != null &&
+                targetCode.getSelectionModel().getSelectedItem() != null &&
+                isValidInput(amount.getText())
+        ) {
+            if(!"".equals(amount.getText()))
+            resultButton.setDisable(false);
         }
+    }
 
-        stage.setScene(scene);
-        stage.setTitle("NBP currencies");
-
-        stage.show();
+    private boolean isValidInput(String amount) {
+        if("".equals(amount)){
+            return false;
+        }
+        Pattern pattern = Pattern.compile("^[0-9]{0,13}\\.?[0-9]{0,2}$");
+        Matcher matcher = pattern.matcher(amount);
+        return matcher.matches();
     }
 
     private void calcExchangeResult() {
@@ -96,12 +128,15 @@ public class FXNBPApp extends Application {
     }
 
 
+    private void setTable() {
 
-    private void tableChangeExecute() {
 
         Table table = tables.getValue();
+
         sourceCode.getItems().clear();
         targetCode.getItems().clear();
+        resultButton.setDisable(true);
+        result.setText("0,0");
         try {
 
             sourceCode.getItems().addAll(service.findAll(table));
