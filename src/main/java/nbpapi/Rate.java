@@ -13,9 +13,9 @@ import java.math.BigDecimal;
 public class Rate {
     private String currency;
     private String code;
-    private double ask;
-    private double bid;
-    private double mid;
+    private BigDecimal ask;
+    private BigDecimal bid;
+    private BigDecimal mid;
 
 
 

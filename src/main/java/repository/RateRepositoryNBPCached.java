@@ -6,13 +6,18 @@ import nbpapi.Table;
 import nbpapi.URIGenerator;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class RateRepositoryNBPCached implements RateRepository{
-    private static final Rate RATE_PLN = Rate.builder().code("PLN").mid(1).currency("złoty").build();
+    private static final Rate RATE_PLN = Rate.builder()
+            .code("PLN")
+            .mid(BigDecimal.valueOf(1))
+            .currency("złoty")
+            .build();
     private ApiRepository<RateTable> rates = new ApiRepository<>(RateTable.class);
     private Map<LocalDate, RateTable> cacheA = new HashMap<>();
     private Map<LocalDate, RateTable> cacheB = new HashMap<>();

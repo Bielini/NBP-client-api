@@ -6,12 +6,17 @@ import nbpapi.Table;
 import nbpapi.URIGenerator;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 public class RateRepositoryNBP implements RateRepository {
     private static final ApiRepository<RateTable> rates = new ApiRepository<>(RateTable.class);
-    private static final Rate RATE_PLN = Rate.builder().currency("złotówki polskie").code("PLN").mid(1.00).build();
+    private static final Rate RATE_PLN = Rate.builder()
+            .currency("złotówki polskie")
+            .code("PLN")
+            .mid(BigDecimal.valueOf(1.00))
+            .build();
 
     @Override
     public List<Rate> findByTableLast(Table table) throws IOException, InterruptedException {

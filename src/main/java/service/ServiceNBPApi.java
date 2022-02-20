@@ -5,6 +5,7 @@ import nbpapi.Table;
 import repository.RateRepository;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.security.InvalidParameterException;
 import java.time.LocalDate;
 import java.util.List;
@@ -19,7 +20,7 @@ public class ServiceNBPApi implements ServiceNBP {
     }
 
     @Override
-    public double calc(double amount, String source, String target) throws IOException, InterruptedException {
+    public BigDecimal calc(BigDecimal amount, String source, String target) throws IOException, InterruptedException {
         final List<Rate> rates = this.rates.findByTableLast(Table.TABLE_A);
         Optional<Rate> sourceRate = rates.stream()
                 .filter(rate -> rate.getCode().equals(source))
@@ -30,7 +31,7 @@ public class ServiceNBPApi implements ServiceNBP {
                 .findFirst();
 
         if (sourceRate.isPresent() && targetRate.isPresent()) {
-            return amount * sourceRate.get().getMid() / targetRate.get().getMid();
+            return amount.multiply(sourceRate.get().getMid().divide(targetRate.get().getMid()));
         } else {
             throw new InvalidParameterException("Missing code");
         }

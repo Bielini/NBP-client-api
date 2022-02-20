@@ -9,6 +9,7 @@ import service.ServiceNBP;
 import service.ServiceNBPApi;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
@@ -86,7 +87,7 @@ public class ConsoleNBPApp {
         printCurrencyCodes();
 
         System.out.println("Type amount: ");
-        double amount = amountValidation();
+        BigDecimal amount = amountValidation();
         scanner.nextLine();
 
         System.out.println("Type source currency code :");
@@ -96,7 +97,7 @@ public class ConsoleNBPApp {
         String targetCode = codeValidation();
 
         try {
-            double result = service.calc(amount, sourceCode, targetCode);
+            BigDecimal result = service.calc(amount,sourceCode, targetCode);
             System.out.printf("Result = %.2f\n", result);
         } catch (IOException e) {
             System.err.println("Connection issue");
@@ -106,16 +107,16 @@ public class ConsoleNBPApp {
     }
 
 
-    private static double amountValidation() {
-        double amount;
+    private static BigDecimal amountValidation() {
+        BigDecimal amount;
         boolean flag = true;
         do {
             while (!scanner.hasNextDouble()) {
                 System.out.println("Put correct value type!");
                 scanner.next();
             }
-            amount = scanner.nextDouble();
-            if (amount <= 0) {
+            amount = scanner.nextBigDecimal();
+            if (amount.compareTo(BigDecimal.valueOf(0)) > 0) {
                 System.out.println("Value must be greater then 0!");
             } else {
                 flag = false;
