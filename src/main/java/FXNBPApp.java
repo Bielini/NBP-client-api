@@ -10,9 +10,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import nbpapi.Rate;
+import nbpapi.RateTable;
 import nbpapi.Table;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import repository.RateRepository;
 import repository.RateRepositoryNBPCached;
 import service.ServiceNBP;
@@ -31,9 +30,10 @@ import java.util.regex.Pattern;
 public class FXNBPApp extends Application {
 
     private final VBox root = new VBox();
-    private final Scene scene = new Scene(root, 600, 400);
+    private final Scene scene = new Scene(root, 600, 420);
 
-    private final HBox tablesRow = new HBox(30);
+    private final HBox tablesChooseRow = new HBox(30);
+    private final HBox tablesLabelRow = new HBox(30);
     private final HBox resultsRow = new HBox(40);
     private final HBox currenciesLabelRow = new HBox(80);
     private final HBox currenciesChooseRow = new HBox(80);
@@ -42,9 +42,11 @@ public class FXNBPApp extends Application {
     private final Label titleLabel = new Label("NBP Currency converter ");
     private final Label sourceLabel = new Label("Source currency ");
     private final Label targetLabel = new Label("Target currency ");
-    private final Label result = new Label();
+    private final Label resultLabel = new Label();
+    private final Label dateLabel = new Label("Pick date of notation");
+    private final Label tableLabel = new Label("Choose table ");
 
-    private final DatePicker datePicker = new DatePicker();
+    private final ComboBox<RateTable> dates = new ComboBox<>();
     private final TextField amount = new TextField();
     private final ComboBox<Rate> sourceCode = new ComboBox<>();
     private final ComboBox<Rate> targetCode = new ComboBox<>();
@@ -81,7 +83,8 @@ public class FXNBPApp extends Application {
         tables.getItems().addAll(Table.values());
 
         amountLabel.setFont(new Font("Arial", 15));
-        result.setFont(new Font("Arial", 15));
+        resultLabel.setFont(new Font("Arial", 15));
+
 
         titleLabel.setFont(new Font("Arial", 24));
         amount.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
@@ -92,11 +95,14 @@ public class FXNBPApp extends Application {
         currenciesChooseRow.getChildren().addAll(sourceCode, targetCode);
         currenciesChooseRow.setAlignment(Pos.TOP_CENTER);
 
-        tablesRow.getChildren().addAll(tables, datePicker);
-        tablesRow.setAlignment(Pos.TOP_CENTER);
+        tablesLabelRow.getChildren().addAll(tableLabel,dateLabel);
+        tablesLabelRow.setAlignment(Pos.TOP_CENTER);
+
+        tablesChooseRow.getChildren().addAll(tables, dates);
+        tablesChooseRow.setAlignment(Pos.TOP_CENTER);
 
 
-        resultsRow.getChildren().addAll(resultButton, result);
+        resultsRow.getChildren().addAll(resultButton, resultLabel);
         resultsRow.setAlignment(Pos.TOP_CENTER);
 
         root.setSpacing(10);
@@ -105,14 +111,15 @@ public class FXNBPApp extends Application {
                 titleLabel,
                 amountLabel,
                 amount,
-                tablesRow,
+                tablesLabelRow,
+                tablesChooseRow,
                 currenciesLabelRow,
                 currenciesChooseRow,
                 resultsRow);
         root.setAlignment(Pos.TOP_CENTER);
         setBackground();
         resultButton.setPrefSize(150, 70);
-        result.setPrefWidth(220);
+        resultLabel.setPrefWidth(220);
         resultButton.setDisable(true);
 
     }
@@ -123,7 +130,7 @@ public class FXNBPApp extends Application {
         try {
             input = new FileInputStream("resources/background.png");
         } catch (FileNotFoundException e) {
-            System.err.println("Invalid background image path!");
+            System.err.println("Background image not found!");
         }
         assert input != null;
 
@@ -142,12 +149,12 @@ public class FXNBPApp extends Application {
         try {
             input = new FileInputStream("resources/calculator.png");
         } catch (FileNotFoundException e) {
-            System.err.println("Invalid button image path!");
+            System.err.println("Button image not found!");
         }
         assert input != null;
         Image image = new Image(input);
         ImageView imageView = new ImageView(image);
-        return new Button("Calculate ", imageView);
+        return new Button("Calculate", imageView);
 
     }
 
@@ -191,7 +198,6 @@ public class FXNBPApp extends Application {
 
         BigDecimal input = BigDecimal.valueOf(Double.parseDouble(amount.getText()));
 
-
         if (tables.getSelectionModel().getSelectedItem().equals(Table.TABLE_C)) {
             BigDecimal source = sourceCode.getSelectionModel().getSelectedItem().getAsk();
             BigDecimal target = targetCode.getSelectionModel().getSelectedItem().getAsk();
@@ -202,12 +208,12 @@ public class FXNBPApp extends Application {
 
             BigDecimal bid = input.multiply(source.divide(target,RoundingMode.HALF_EVEN));
 
-            result.setText(String.format("Sell value: \n%6.2f\nBuy value: \n%6.2f", ask, bid));
+            resultLabel.setText(String.format("Sell value: \n%6.2f\nBuy value: \n%6.2f", ask, bid));
         } else {
             BigDecimal source = sourceCode.getSelectionModel().getSelectedItem().getMid();
             BigDecimal target = targetCode.getSelectionModel().getSelectedItem().getMid();
             BigDecimal mid = input.multiply(source.divide(target,RoundingMode.HALF_EVEN));
-            result.setText(String.format("Middle value:\n%6.2f", mid));
+            resultLabel.setText(String.format("Middle value:\n%6.2f", mid));
         }
     }
 
@@ -227,9 +233,9 @@ public class FXNBPApp extends Application {
         resultButton.setDisable(true);
 
         if(Table.TABLE_C.equals(table)){
-            result.setText("Sell value: \n\nBuy value: ");
+            resultLabel.setText("Sell value: \n\nBuy value: ");
         }else {
-            result.setText("Middle value: ");
+            resultLabel.setText("Middle value: ");
         }
         try {
 
