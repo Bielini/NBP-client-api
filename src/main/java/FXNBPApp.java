@@ -10,7 +10,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import nbpapi.Rate;
-import nbpapi.RateTable;
 import nbpapi.Table;
 import repository.RateRepository;
 import repository.RateRepositoryNBPCached;
@@ -28,6 +27,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FXNBPApp extends Application {
+    private final RateRepository repository = new RateRepositoryNBPCached();
+    private final ServiceNBP service = new ServiceNBPApi(repository);
 
     private final VBox root = new VBox();
     private final Scene scene = new Scene(root, 600, 420);
@@ -46,15 +47,13 @@ public class FXNBPApp extends Application {
     private final Label dateLabel = new Label("Pick date of notation");
     private final Label tableLabel = new Label("Choose table ");
 
-    private final ComboBox<RateTable> dates = new ComboBox<>();
+    private final DatePicker datePicker = new DatePicker();
     private final TextField amount = new TextField();
     private final ComboBox<Rate> sourceCode = new ComboBox<>();
     private final ComboBox<Rate> targetCode = new ComboBox<>();
     private final ComboBox<Table> tables = new ComboBox<>();
     private final Button resultButton = buttonCreation();
 
-    private final RateRepository repository = new RateRepositoryNBPCached();
-    private final ServiceNBP service = new ServiceNBPApi(repository);
 
     public static void main(String[] args) {
         launch();
@@ -98,7 +97,7 @@ public class FXNBPApp extends Application {
         tablesLabelRow.getChildren().addAll(tableLabel,dateLabel);
         tablesLabelRow.setAlignment(Pos.TOP_CENTER);
 
-        tablesChooseRow.getChildren().addAll(tables, dates);
+        tablesChooseRow.getChildren().addAll(tables, datePicker);
         tablesChooseRow.setAlignment(Pos.TOP_CENTER);
 
 
@@ -177,7 +176,7 @@ public class FXNBPApp extends Application {
         if ("".equals(amount)) {
             return false;
         }
-        Pattern pattern = Pattern.compile("^[0-9]{0,13}\\.?[0-9]{0,10}$");
+        Pattern pattern = Pattern.compile("^[0-9]{0,13}\\.?[0-9]{0,2}$");
         Matcher matcher = pattern.matcher(amount);
         return matcher.matches();
     }
@@ -248,9 +247,7 @@ public class FXNBPApp extends Application {
 
             sourceCode.getSelectionModel().select(0);
             targetCode.getSelectionModel().select(0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
