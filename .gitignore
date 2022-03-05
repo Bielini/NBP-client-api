@@ -1,12 +1,12 @@
 /.idea
 /target
-**/postapi
-**/PostApp.java
-**/exercises
-**/controller
 
-**/ConsoleNBPApp.java
-**/App.java
+
+exercises
+controller
+
+ConsoleNBPApp.java
+App.java
 
 
 # Created by https://www.toptal.com/developers/gitignore/api/java
