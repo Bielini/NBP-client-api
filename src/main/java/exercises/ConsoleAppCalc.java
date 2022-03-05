@@ -1,10 +1,8 @@
 package exercises;
 
-import controller.ConsoleController;
-import controller.Menu;
-import controller.MenuItem;
-import nbpapi.Rate;
-import repository.RateRepository;
+import menu_controller.ConsoleController;
+import menu_controller.Menu;
+import menu_controller.MenuItem;
 
 import java.util.List;
 import java.util.Scanner;

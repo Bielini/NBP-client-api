@@ -35,7 +35,7 @@ public class RateRepositoryNBPCached implements RateRepository{
             if (cacheA.containsKey(date)) {
                 return cacheA.get(date).getRates();
             } else {
-                //TODO poprawić generowanie URI dla konkretnej daty tabeli
+
                 final List<RateTable> list = this.rates.getList(URIGenerator.tableByDateJson(table, date));
                 if (!list.isEmpty()) {
                     RateTable rateTable = list.get(0);
@@ -51,7 +51,7 @@ public class RateRepositoryNBPCached implements RateRepository{
             if (cacheB.containsKey(date)) {
                 return cacheB.get(date).getRates();
             } else {
-                //TODO poprawić generowanie URI dla konkretnej daty tabeli
+
                 final RateTable rateTable = this.rates.getList(URIGenerator.tableByDateJson(table, date)).get(0);
                 final String strDate = rateTable.getEffectiveDate();
                 final LocalDate dateTable = LocalDate.parse(strDate);

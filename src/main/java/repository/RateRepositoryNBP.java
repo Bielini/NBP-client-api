@@ -24,6 +24,7 @@ public class RateRepositoryNBP implements RateRepository {
         rates.add(RATE_PLN);
         return rates;
     }
+
     @Override
     public List<Rate> findByTableAndDate(Table table, LocalDate date) throws IOException, InterruptedException {
         List<Rate> rates = RateRepositoryNBP.rates.getList(URIGenerator.currentTableJson(table)).get(0).getRates();

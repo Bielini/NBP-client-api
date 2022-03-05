@@ -1,4 +1,4 @@
-package controller;
+package menu_controller;
 
 import lombok.Builder;
 import lombok.Data;

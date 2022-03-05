@@ -1,6 +1,6 @@
-import controller.ConsoleController;
-import controller.Menu;
-import controller.MenuItem;
+import menu_controller.ConsoleController;
+import menu_controller.Menu;
+import menu_controller.MenuItem;
 import nbpapi.Rate;
 import nbpapi.Table;
 import repository.RateRepository;

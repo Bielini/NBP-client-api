@@ -46,8 +46,8 @@ public class FXNBPApp extends Application {
     private final Label dateLabel = new Label("Pick date of notation");
     private final Label tableLabel = new Label("Choose table ");
 
-    private final ComboBox<RateTable> dates = new ComboBox<>();
     private final TextField amount = new TextField();
+    private final DatePicker date = new DatePicker();
     private final ComboBox<Rate> sourceCode = new ComboBox<>();
     private final ComboBox<Rate> targetCode = new ComboBox<>();
     private final ComboBox<Table> tables = new ComboBox<>();
@@ -98,7 +98,7 @@ public class FXNBPApp extends Application {
         tablesLabelRow.getChildren().addAll(tableLabel,dateLabel);
         tablesLabelRow.setAlignment(Pos.TOP_CENTER);
 
-        tablesChooseRow.getChildren().addAll(tables, dates);
+        tablesChooseRow.getChildren().addAll(tables, date);
         tablesChooseRow.setAlignment(Pos.TOP_CENTER);
 
 
@@ -197,6 +197,7 @@ public class FXNBPApp extends Application {
     private void calcExchangeResult() {
 
         BigDecimal input = BigDecimal.valueOf(Double.parseDouble(amount.getText()));
+        System.out.println(date.getValue());
 
         if (tables.getSelectionModel().getSelectedItem().equals(Table.TABLE_C)) {
             BigDecimal source = sourceCode.getSelectionModel().getSelectedItem().getAsk();
